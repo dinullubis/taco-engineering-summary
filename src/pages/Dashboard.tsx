@@ -1,5 +1,5 @@
 import KPIcard from "../components/KPIcard";
-
+import BreakdownChart from "../components/BreakdownChart";
 
 function Dashboard(){
 
@@ -76,7 +76,11 @@ color="text-green-400"
 />
 
 </div>
+<div className="mt-8">
 
+  <BreakdownChart/>
+
+</div>
 </div>
 
 )
