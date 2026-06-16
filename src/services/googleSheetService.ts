@@ -111,3 +111,59 @@ mttr:number;
 mtbf:number;
 
 }
+
+export const getBreakdownByArea = async():Promise<AreaBreakdown[]>=>{
+
+try{
+
+const url=
+`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_DATABASE_WO}`;
+
+const response=await fetch(url);
+
+const text=await response.text();
+
+const jsonString=text.substring(
+text.indexOf("{"),
+text.lastIndexOf("}")+1
+);
+
+const jsonData=JSON.parse(jsonString);
+
+const rows=jsonData.table.rows;
+
+const breakdownMap:Record<string,number>={};
+
+rows.forEach((row:any)=>{
+
+if(!row || !row.c) return;
+
+const area=String(row.c[7]?.v || "");
+
+const status=String(row.c[9]?.v || "");
+
+if(status==="BREAKDOWN"){
+
+breakdownMap[area]=(breakdownMap[area]||0)+1;
+
+}
+
+});
+
+return Object.keys(breakdownMap).map(key=>({
+
+area:key,
+
+count:breakdownMap[key]
+
+}));
+
+}
+
+catch{
+
+return[];
+
+}
+
+};
