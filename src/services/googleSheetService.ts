@@ -278,3 +278,67 @@ return[];
 }
 
 };
+
+export const getOpenWO = async():Promise<OpenWO[]>=>{
+
+try{
+
+const url=
+`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_DATABASE_WO}`;
+
+const response=await fetch(url);
+
+const text=await response.text();
+
+const jsonString=text.substring(
+text.indexOf("{"),
+text.lastIndexOf("}")+1
+);
+
+const jsonData=JSON.parse(jsonString);
+
+const rows=jsonData.table.rows;
+
+const data:OpenWO[]=[];
+
+rows.forEach((row:any)=>{
+
+if(!row || !row.c) return;
+
+const status=String(row.c[13]?.v || "");
+
+if(status.toUpperCase()!=="CLOSE"){
+
+data.push({
+
+woNumber:String(row.c[0]?.v || ""),
+
+area:String(row.c[7]?.v || ""),
+
+machine:String(row.c[8]?.v || ""),
+
+problem:String(row.c[10]?.v || ""),
+
+picEngineer:String(row.c[14]?.v || ""),
+
+status:status,
+
+openDate:String(row.c[2]?.f || row.c[2]?.v || "")
+
+});
+
+}
+
+});
+
+return data.reverse();
+
+}
+
+catch{
+
+return[];
+
+}
+
+};
