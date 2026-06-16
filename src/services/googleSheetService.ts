@@ -72,3 +72,42 @@ const data=await getDailyKPI();
 return data[data.length-1];
 
 };
+
+export interface AreaBreakdown{
+
+area:string;
+
+count:number;
+
+}
+
+
+export interface WOTrend{
+
+date:string;
+
+open:number;
+
+close:number;
+
+}
+
+
+export interface DowntimeTrend{
+
+date:string;
+
+downtime:number;
+
+}
+
+
+export interface MTTRMTBFTrend{
+
+date:string;
+
+mttr:number;
+
+mtbf:number;
+
+}
