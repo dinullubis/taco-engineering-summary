@@ -106,3 +106,21 @@ export interface TopBreakdown {
   mttr:number;
 
 }
+
+export interface OpenWO{
+
+woNumber:string;
+
+area:string;
+
+machine:string;
+
+problem:string;
+
+picEngineer:string;
+
+status:string;
+
+openDate:string;
+
+}
