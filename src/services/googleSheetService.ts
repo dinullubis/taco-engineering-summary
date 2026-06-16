@@ -167,3 +167,49 @@ return[];
 }
 
 };
+
+export const getWOTrend = async():Promise<WOTrend[]>=>{
+
+const data=await getDailyKPI();
+
+return data.map(item=>({
+
+date:item.tanggal,
+
+open:item.woOpen,
+
+close:item.woClose
+
+}));
+
+};
+
+export const getDowntimeTrend = async():Promise<DowntimeTrend[]>=>{
+
+const data=await getDailyKPI();
+
+return data.map(item=>({
+
+date:item.tanggal,
+
+downtime:item.downtime
+
+}));
+
+};
+
+export const getMTTRMTBF = async():Promise<MTTRMTBFTrend[]>=>{
+
+const data=await getDailyKPI();
+
+return data.map(item=>({
+
+date:item.tanggal,
+
+mttr:item.mttr,
+
+mtbf:item.mtbf
+
+}));
+
+};
