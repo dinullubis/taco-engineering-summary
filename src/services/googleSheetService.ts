@@ -213,3 +213,68 @@ mtbf:item.mtbf
 }));
 
 };
+
+export const getTopBreakdown = async():Promise<TopBreakdown[]>=>{
+
+try{
+
+const url=
+`https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_DATABASE_WO}`;
+
+const response=await fetch(url);
+
+const text=await response.text();
+
+const jsonString=text.substring(
+text.indexOf("{"),
+text.lastIndexOf("}")+1
+);
+
+const jsonData=JSON.parse(jsonString);
+
+const rows=jsonData.table.rows;
+
+const data:TopBreakdown[]=[];
+
+rows.forEach((row:any)=>{
+
+if(!row || !row.c) return;
+
+const downtime=Number(row.c[19]?.v || 0);
+
+if(downtime>0){
+
+data.push({
+
+area:String(row.c[7]?.v || ""),
+
+machine:String(row.c[8]?.v || ""),
+
+woNumber:String(row.c[0]?.v || ""),
+
+problem:String(row.c[10]?.v || ""),
+
+downtime:downtime,
+
+mttr:Number(row.c[20]?.v || 0)
+
+});
+
+}
+
+});
+
+
+data.sort((a,b)=>b.downtime-a.downtime);
+
+return data.slice(0,10);
+
+}
+
+catch{
+
+return[];
+
+}
+
+};
