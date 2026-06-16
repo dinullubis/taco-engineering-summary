@@ -1,0 +1,13 @@
+export const SPREADSHEET_ID =
+
+'1iH_gZNJC5NDdbB1I9tK2sXbUWxcu4pPVZCchHMhlb5g';
+
+
+export const SHEET_MASTER_KPI_HARIAN=
+
+'MASTER_KPI_HARIAN';
+
+
+export const SHEET_DATABASE_WO=
+
+'DATABASE_WO';
