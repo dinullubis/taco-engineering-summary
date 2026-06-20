@@ -9,12 +9,36 @@ export const SHEET_MASTER_KPI_HARIAN =
 export const SHEET_DATABASE_WO =
 "DATABASE_WO";
 
+export interface AreaBreakdown{
+  area:string;
+  count:number;
+}
 
-export const getDailyKPI = async (): Promise<DailyKPI[]> => {
+export interface WOTrend{
+  date:string;
+  open:number;
+  close:number;
+}
+
+export interface DowntimeTrend{
+  date:string;
+  downtime:number;
+}
+
+export interface MTTRMTBFTrend{
+  date:string;
+  mttr:number;
+  mtbf:number;
+}
+
+
+// ================= DAILY KPI =================
+
+export const getDailyKPI = async ():Promise<DailyKPI[]>=>{
 
 try{
 
-const url =
+const url=
 `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_MASTER_KPI_HARIAN}`;
 
 const response=await fetch(url);
@@ -28,14 +52,13 @@ text.lastIndexOf("}")+1
 
 const jsonData=JSON.parse(jsonString);
 
-
 return jsonData.table.rows.map((row:any)=>({
 
 tanggal:String(row.c[0]?.f || row.c[0]?.v || ""),
 
-attendanceRate:Number(row.c[1]?.v || 0),
+attendanceRate:Number((row.c[5]?.v || 0)*100),
 
-otJam:Number(row.c[2]?.v || 0),
+otJam:Number(row.c[6]?.v || 0),
 
 woClose:Number(row.c[7]?.v || 0),
 
@@ -57,12 +80,11 @@ catch(error){
 
 console.log(error);
 
-return [];
+return[];
 
 }
 
 };
-
 
 
 export const getLatestDailyKPI = async()=>{
@@ -73,46 +95,10 @@ return data[data.length-1];
 
 };
 
-export interface AreaBreakdown{
 
-area:string;
+// ================= BREAKDOWN AREA =================
 
-count:number;
-
-}
-
-
-export interface WOTrend{
-
-date:string;
-
-open:number;
-
-close:number;
-
-}
-
-
-export interface DowntimeTrend{
-
-date:string;
-
-downtime:number;
-
-}
-
-
-export interface MTTRMTBFTrend{
-
-date:string;
-
-mttr:number;
-
-mtbf:number;
-
-}
-
-export const getBreakdownByArea = async():Promise<AreaBreakdown[]>=>{
+export const getBreakdownByArea=async():Promise<AreaBreakdown[]>=>{
 
 try{
 
@@ -132,7 +118,7 @@ const jsonData=JSON.parse(jsonString);
 
 const rows=jsonData.table.rows;
 
-const breakdownMap:Record<string,number>={};
+const map:Record<string,number>={};
 
 rows.forEach((row:any)=>{
 
@@ -144,17 +130,17 @@ const status=String(row.c[9]?.v || "");
 
 if(status==="BREAKDOWN"){
 
-breakdownMap[area]=(breakdownMap[area]||0)+1;
+map[area]=(map[area]||0)+1;
 
 }
 
 });
 
-return Object.keys(breakdownMap).map(key=>({
+return Object.keys(map).map(key=>({
 
 area:key,
 
-count:breakdownMap[key]
+count:map[key]
 
 }));
 
@@ -168,7 +154,10 @@ return[];
 
 };
 
-export const getWOTrend = async():Promise<WOTrend[]>=>{
+
+// ================= WO TREND =================
+
+export const getWOTrend=async():Promise<WOTrend[]>=>{
 
 const data=await getDailyKPI();
 
@@ -184,7 +173,10 @@ close:item.woClose
 
 };
 
-export const getDowntimeTrend = async():Promise<DowntimeTrend[]>=>{
+
+// ================= DOWNTIME =================
+
+export const getDowntimeTrend=async():Promise<DowntimeTrend[]>=>{
 
 const data=await getDailyKPI();
 
@@ -198,7 +190,10 @@ downtime:item.downtime
 
 };
 
-export const getMTTRMTBF = async():Promise<MTTRMTBFTrend[]>=>{
+
+// ================= MTTR MTBF =================
+
+export const getMTTRMTBF=async():Promise<MTTRMTBFTrend[]>=>{
 
 const data=await getDailyKPI();
 
@@ -214,7 +209,10 @@ mtbf:item.mtbf
 
 };
 
-export const getTopBreakdown = async():Promise<TopBreakdown[]>=>{
+
+// ================= TOP BREAKDOWN =================
+
+export const getTopBreakdown=async():Promise<TopBreakdown[]>=>{
 
 try{
 
@@ -264,7 +262,6 @@ mttr:Number(row.c[20]?.v || 0)
 
 });
 
-
 data.sort((a,b)=>b.downtime-a.downtime);
 
 return data.slice(0,10);
@@ -279,7 +276,10 @@ return[];
 
 };
 
-export const getOpenWO = async():Promise<OpenWO[]>=>{
+
+// ================= OPEN WO =================
+
+export const getOpenWO=async():Promise<OpenWO[]>=>{
 
 try{
 
