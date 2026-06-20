@@ -9,6 +9,7 @@ export const SHEET_MASTER_KPI_HARIAN =
 export const SHEET_DATABASE_WO =
 "DATABASE_WO";
 
+
 export interface AreaBreakdown{
   area:string;
   count:number;
@@ -32,9 +33,9 @@ export interface MTTRMTBFTrend{
 }
 
 
-// ================= DAILY KPI =================
+// ================= KPI =================
 
-export const getDailyKPI = async ():Promise<DailyKPI[]>=>{
+export const getDailyKPI = async (): Promise<DailyKPI[]> => {
 
 try{
 
@@ -80,7 +81,7 @@ catch(error){
 
 console.log(error);
 
-return[];
+return [];
 
 }
 
@@ -98,7 +99,7 @@ return data[data.length-1];
 
 // ================= BREAKDOWN AREA =================
 
-export const getBreakdownByArea=async():Promise<AreaBreakdown[]>=>{
+export const getBreakdownByArea = async():Promise<AreaBreakdown[]>=>{
 
 try{
 
@@ -122,7 +123,7 @@ const map:Record<string,number>={};
 
 rows.forEach((row:any)=>{
 
-if(!row || !row.c) return;
+if(!row?.c) return;
 
 const area=String(row.c[7]?.v || "");
 
@@ -236,7 +237,7 @@ const data:TopBreakdown[]=[];
 
 rows.forEach((row:any)=>{
 
-if(!row || !row.c) return;
+if(!row?.c) return;
 
 const downtime=Number(row.c[19]?.v || 0);
 
@@ -279,7 +280,7 @@ return[];
 
 // ================= OPEN WO =================
 
-export const getOpenWO=async():Promise<OpenWO[]>=>{
+export const getOpenWO = async():Promise<OpenWO[]>=>{
 
 try{
 
@@ -303,11 +304,11 @@ const data:OpenWO[]=[];
 
 rows.forEach((row:any)=>{
 
-if(!row || !row.c) return;
+if(!row?.c) return;
 
-const status=String(row.c[13]?.v || "");
+const status=String(row.c[13]?.v || "").trim();
 
-if(status.toUpperCase()!=="CLOSE"){
+if(status && status.toUpperCase()!=="CLOSE"){
 
 data.push({
 
@@ -331,13 +332,15 @@ openDate:String(row.c[2]?.f || row.c[2]?.v || "")
 
 });
 
-return data.reverse();
+return data;
 
 }
 
-catch{
+catch(error){
 
-return[];
+console.log(error);
+
+return [];
 
 }
 
