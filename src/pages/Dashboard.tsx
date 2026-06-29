@@ -23,7 +23,9 @@ function Dashboard() {
   const [summary, setSummary] = useState<any>(null);
   const [dailyData, setDailyData] = useState<DailyKPI[]>([]);
 const [woData, setWOData] = useState<WORow[]>([]);
-
+const [filteredDaily, setFilteredDaily] = useState<DailyKPI[]>([]);
+const [filteredWO, setFilteredWO] = useState<WORow[]>([]);
+  
   // Filter Date
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -48,7 +50,9 @@ setSummary(woSummary);
 
 setDailyData(daily);
 setWOData(wo);  
-
+setFilteredDaily(daily);
+setFilteredWO(wo);
+    
   };
 
   return (
