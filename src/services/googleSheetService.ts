@@ -434,7 +434,16 @@ export const getWOSummary = async (): Promise<WOSummary> => {
       }
 
     });
-
+alert(
+JSON.stringify({
+woOpen,
+woClose,
+breakdown,
+downtime,
+totalMTTR,
+mttrCount
+})
+);
     return {
 
       woOpen,
