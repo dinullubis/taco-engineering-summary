@@ -75,8 +75,6 @@ const jsonData=JSON.parse(jsonString);
 
 return jsonData.table.rows.map((row:any)=>({
 
-console.log("Tanggal RAW:", row.c[0]);
-
 tanggal: String(row.c[0]?.f || row.c[0]?.v || ""),
 
 attendanceRate:Number((row.c[5]?.v || 0)*100),
@@ -508,8 +506,6 @@ export const getAllWO = async (): Promise<WORow[]> => {
     return rows.map((row: any) => ({
 
       woNumber: String(row.c[0]?.v || ""),
-
-      console.log("OpenDate RAW:", row.c[2]);
 
 openDate: String(row.c[2]?.f || row.c[2]?.v || ""),
 
