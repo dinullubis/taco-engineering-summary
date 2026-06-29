@@ -32,6 +32,14 @@ export interface MTTRMTBFTrend{
   mtbf:number;
 }
 
+export interface WOSummary {
+  woOpen: number;
+  woClose: number;
+  breakdown: number;
+  downtime: number;
+  mttr: number;
+  mtbf: number;
+}
 
 // ================= KPI =================
 
@@ -353,5 +361,109 @@ console.log(error);
 return [];
 
 }
+
+};
+
+export const getWOSummary = async (): Promise<WOSummary> => {
+
+  try {
+
+    const url =
+      `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_DATABASE_WO}`;
+
+    const response = await fetch(url);
+
+    const text = await response.text();
+
+    const jsonString = text.substring(
+      text.indexOf("{"),
+      text.lastIndexOf("}") + 1
+    );
+
+    const jsonData = JSON.parse(jsonString);
+
+    const rows = jsonData.table.rows;
+
+    let woOpen = 0;
+    let woClose = 0;
+    let breakdown = 0;
+    let downtime = 0;
+    let totalMTTR = 0;
+    let mttrCount = 0;
+
+    rows.forEach((row: any) => {
+
+      if (!row?.c) return;
+
+      const statusProgress = String(row.c[13]?.v || "").trim().toUpperCase();
+      const statusWO = String(row.c[9]?.v || "").trim().toUpperCase();
+
+      const downtimeValue = Number(row.c[19]?.v || 0);
+      const mttrValue = Number(row.c[20]?.v || 0);
+
+      if (statusProgress === "CLOSE") {
+
+        woClose++;
+
+      } else if (statusProgress !== "") {
+
+        woOpen++;
+
+      }
+
+      if (statusWO === "BREAKDOWN") {
+
+        breakdown++;
+
+      }
+
+      downtime += downtimeValue;
+
+      if (mttrValue > 0) {
+
+        totalMTTR += mttrValue;
+        mttrCount++;
+
+      }
+
+    });
+
+    return {
+
+      woOpen,
+
+      woClose,
+
+      breakdown,
+
+      downtime,
+
+      mttr: mttrCount === 0 ? 0 : Number((totalMTTR / mttrCount).toFixed(2)),
+
+      mtbf: 0
+
+    };
+
+  } catch (error) {
+
+    console.log(error);
+
+    return {
+
+      woOpen: 0,
+
+      woClose: 0,
+
+      breakdown: 0,
+
+      downtime: 0,
+
+      mttr: 0,
+
+      mtbf: 0
+
+    };
+
+  }
 
 };
