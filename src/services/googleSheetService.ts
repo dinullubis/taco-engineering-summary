@@ -402,7 +402,10 @@ export const getWOSummary = async (): Promise<WOSummary> => {
     row.c[13]?.v
   );
 
-      const statusProgress = String(row.c[13]?.v || "").trim().toUpperCase();
+      console.log({
+  wo: row.c[0]?.v,
+  status: row.c[13]?.v
+});
       const statusWO = String(row.c[9]?.v || "").trim().toUpperCase();
 
       const downtimeValue = Number(row.c[19]?.v || 0);
