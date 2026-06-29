@@ -9,7 +9,8 @@ import TopBreakdownTable from "../components/TopBreakdownTable";
 import OpenWOTable from "../components/OpenWOTable";
 
 import {
-getLatestDailyKPI
+  getLatestDailyKPI,
+  getWOSummary
 } from "../services/googleSheetService";
 
 import {DailyKPI} from "../types/kpi";
@@ -18,20 +19,15 @@ import {DailyKPI} from "../types/kpi";
 function Dashboard(){
 
 const [kpi,setKpi]=useState<DailyKPI|null>(null);
-
+const [summary,setSummary]=useState<any>(null);
 
 useEffect(() => {
 
-  getLatestDailyKPI().then((data) => {
+  getLatestDailyKPI().then(setKpi);
 
-    alert(JSON.stringify(data));
-
-    setKpi(data);
-
-  });
+  getWOSummary().then(setSummary);
 
 }, []);
-
 console.log("KPI STATE :", kpi);
 return(
 
@@ -92,7 +88,7 @@ color="text-orange-400"
 
 title="WO Close"
 
-value={kpi?.woClose || 0}
+value={summary?.woClose || 0}
 
 />
 
@@ -101,7 +97,7 @@ value={kpi?.woClose || 0}
 
 title="WO Open"
 
-value={kpi?.woOpen || 0}
+value={summary?.woOpen || 0}
 
 color="text-red-400"
 
@@ -112,7 +108,7 @@ color="text-red-400"
 
 title="Breakdown"
 
-value={kpi?.breakdown || 0}
+value={summary?.breakdown || 0}
 
 unit="cases"
 
@@ -125,7 +121,7 @@ color="text-orange-500"
 
 title="Downtime"
 
-value={kpi?.downtime || 0}
+value={summary?.downtime || 0}
 
 unit="min"
 
@@ -138,7 +134,7 @@ color="text-red-500"
 
 title="MTTR"
 
-value={kpi?.mttr || 0}
+value={summary?.mttr || 0}
 
 unit="hrs"
 
@@ -149,7 +145,7 @@ unit="hrs"
 
 title="MTBF"
 
-value={kpi?.mtbf || 0}
+value={summary?.mtbf || 0}
 
 unit="hrs"
 
