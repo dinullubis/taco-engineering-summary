@@ -20,16 +20,17 @@ function Dashboard(){
 const [kpi,setKpi]=useState<DailyKPI|null>(null);
 
 
-useEffect(()=>{
+useEffect(() => {
 
-getLatestDailyKPI().then((data)=>{
+getLatestDailyKPI().then((data) => {
+
+console.log("LATEST KPI :", data);
 
 setKpi(data);
 
 });
 
-},[]);
-
+}, []);
 
 
 return(
