@@ -20,7 +20,8 @@ function Dashboard(){
 
 const [kpi,setKpi]=useState<DailyKPI|null>(null);
 const [summary,setSummary]=useState<any>(null);
-
+const [startDate, setStartDate] = useState("");
+const [endDate, setEndDate] = useState("");
 useEffect(() => {
 
   getLatestDailyKPI().then(setKpi);
@@ -54,7 +55,39 @@ Latest :
 {kpi?.tanggal}
 
 </p>
+<div className="flex gap-4 mt-5 flex-wrap">
 
+  <div>
+
+    <label className="text-slate-400 text-sm block mb-1">
+      Start Date
+    </label>
+
+    <input
+      type="date"
+      value={startDate}
+      onChange={(e)=>setStartDate(e.target.value)}
+      className="bg-[#1E293B] text-white rounded-lg px-3 py-2"
+    />
+
+  </div>
+
+  <div>
+
+    <label className="text-slate-400 text-sm block mb-1">
+      End Date
+    </label>
+
+    <input
+      type="date"
+      value={endDate}
+      onChange={(e)=>setEndDate(e.target.value)}
+      className="bg-[#1E293B] text-white rounded-lg px-3 py-2"
+    />
+
+  </div>
+
+</div>
 </div>
 
 
