@@ -7,10 +7,12 @@ import DowntimeChart from "../components/DowntimeChart";
 import MTTRMTBFChart from "../components/MTTRMTBFChart";
 import TopBreakdownTable from "../components/TopBreakdownTable";
 import OpenWOTable from "../components/OpenWOTable";
-
 import {
   getLatestDailyKPI,
-  getWOSummary
+  getWOSummary,
+  getAllDailyKPI,
+  getAllWO,
+  WORow
 } from "../services/googleSheetService";
 
 import { DailyKPI } from "../types/kpi";
@@ -19,6 +21,8 @@ function Dashboard() {
 
   const [kpi, setKpi] = useState<DailyKPI | null>(null);
   const [summary, setSummary] = useState<any>(null);
+  const [dailyData, setDailyData] = useState<DailyKPI[]>([]);
+const [woData, setWOData] = useState<WORow[]>([]);
 
   // Filter Date
   const [startDate, setStartDate] = useState("");
@@ -32,13 +36,18 @@ function Dashboard() {
 
   const loadDashboard = async () => {
 
-    const latest = await getLatestDailyKPI();
+  const [latest, woSummary, daily, wo] = await Promise.all([
+  getLatestDailyKPI(),
+  getWOSummary(),
+  getAllDailyKPI(),
+  getAllWO()
+]);
 
-    setKpi(latest);
+setKpi(latest);
+setSummary(woSummary);
 
-    const woSummary = await getWOSummary();
-
-    setSummary(woSummary);
+setDailyData(daily);
+setWOData(wo);  
 
   };
 
