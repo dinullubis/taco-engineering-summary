@@ -22,13 +22,13 @@ const [kpi,setKpi]=useState<DailyKPI|null>(null);
 
 useEffect(() => {
 
-getLatestDailyKPI().then((data) => {
+  getLatestDailyKPI().then((data) => {
 
-console.log("LATEST KPI :", data);
+    alert(JSON.stringify(data));
 
-setKpi(data);
+    setKpi(data);
 
-});
+  });
 
 }, []);
 
