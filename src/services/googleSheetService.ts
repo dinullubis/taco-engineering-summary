@@ -363,7 +363,6 @@ return [];
 }
 
 };
-
 export const getWOSummary = async (): Promise<WOSummary> => {
 
   try {
@@ -372,7 +371,6 @@ export const getWOSummary = async (): Promise<WOSummary> => {
       `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_DATABASE_WO}`;
 
     const response = await fetch(url);
-
     const text = await response.text();
 
     const jsonString = text.substring(
@@ -381,7 +379,6 @@ export const getWOSummary = async (): Promise<WOSummary> => {
     );
 
     const jsonData = JSON.parse(jsonString);
-
     const rows = jsonData.table.rows;
 
     let woOpen = 0;
@@ -391,86 +388,47 @@ export const getWOSummary = async (): Promise<WOSummary> => {
     let totalMTTR = 0;
     let mttrCount = 0;
 
-   rows.forEach((row:any)=>{
+    rows.forEach((row:any) => {
 
-  if(!row?.c) return;
-rows.forEach((row:any)=>{
+      if (!row?.c) return;
 
-  if(!row?.c) return;
+      const statusProgress = String(row.c[13]?.v || "")
+        .trim()
+        .toUpperCase();
 
-  console.log(
-    "WO:",
-    row.c[0]?.v,
-    "| STATUS_PROGRESS:",
-    row.c[13]?.v
-  );
-
-  const statusProgress = String(row.c[13]?.v || "").trim().toUpperCase();
-  
-  console.log(
-    "WO :",
-    row.c[0]?.v,
-    "STATUS :",
-    row.c[13]?.v
-  );
-
-      console.log({
-  wo: row.c[0]?.v,
-  status: row.c[13]?.v
-});
-      const statusWO = String(row.c[9]?.v || "").trim().toUpperCase();
+      const statusWO = String(row.c[9]?.v || "")
+        .trim()
+        .toUpperCase();
 
       const downtimeValue = Number(row.c[19]?.v || 0);
       const mttrValue = Number(row.c[20]?.v || 0);
 
       if (statusProgress === "CLOSE") {
-
         woClose++;
-
       } else if (statusProgress !== "") {
-
         woOpen++;
-
       }
 
       if (statusWO === "BREAKDOWN") {
-
         breakdown++;
-
       }
 
       downtime += downtimeValue;
 
       if (mttrValue > 0) {
-
         totalMTTR += mttrValue;
         mttrCount++;
-
       }
 
     });
-alert(
-JSON.stringify({
-woOpen,
-woClose,
-breakdown,
-downtime,
-totalMTTR,
-mttrCount
-})
-);
+
     return {
 
       woOpen,
-
       woClose,
-
       breakdown,
-
       downtime,
-
       mttr: mttrCount === 0 ? 0 : Number((totalMTTR / mttrCount).toFixed(2)),
-
       mtbf: 0
 
     };
@@ -482,15 +440,10 @@ mttrCount
     return {
 
       woOpen: 0,
-
       woClose: 0,
-
       breakdown: 0,
-
       downtime: 0,
-
       mttr: 0,
-
       mtbf: 0
 
     };
