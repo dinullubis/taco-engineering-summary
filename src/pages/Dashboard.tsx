@@ -44,7 +44,8 @@ const [filteredWO, setFilteredWO] = useState<WORow[]>([]);
   getAllDailyKPI(),
   getAllWO()
 ]);
-
+console.log("Daily :", daily[0]);
+console.log("WO :", wo[0]);
 setKpi(latest);
 setSummary(woSummary);
 
