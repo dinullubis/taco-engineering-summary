@@ -32,7 +32,7 @@ useEffect(() => {
 
 }, []);
 
-
+console.log("KPI STATE :", kpi);
 return(
 
 <div className="min-h-screen bg-[#0F172A] p-6">
