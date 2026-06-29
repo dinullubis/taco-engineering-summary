@@ -87,14 +87,24 @@ return [];
 
 };
 
+export const getLatestDailyKPI = async (): Promise<DailyKPI> => {
 
-export const getLatestDailyKPI = async()=>{
+  const data = await getDailyKPI();
 
-const data=await getDailyKPI();
+  const latest = [...data]
+    .reverse()
+    .find(item =>
+      item.woClose > 0 ||
+      item.woOpen > 0 ||
+      item.breakdown > 0 ||
+      item.downtime > 0 ||
+      item.otJam > 0
+    );
 
-return data[data.length-1];
+  return latest ?? data[data.length - 1];
 
 };
+
 
 
 // ================= BREAKDOWN AREA =================
