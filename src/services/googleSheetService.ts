@@ -406,8 +406,7 @@ rows.forEach((row:any)=>{
   );
 
   const statusProgress = String(row.c[13]?.v || "").trim().toUpperCase();
-
-  ...
+  
   console.log(
     "WO :",
     row.c[0]?.v,
