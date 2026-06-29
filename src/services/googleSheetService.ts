@@ -451,3 +451,77 @@ export const getWOSummary = async (): Promise<WOSummary> => {
   }
 
 };
+
+// ================= RAW DATA =================
+
+export const getAllDailyKPI = async (): Promise<DailyKPI[]> => {
+  return await getDailyKPI();
+};
+
+export interface WORow {
+  woNumber: string;
+  openDate: string;
+  area: string;
+  machine: string;
+  statusWO: string;
+  problem: string;
+  statusProgress: string;
+  picEngineer: string;
+  downtime: number;
+  mttr: number;
+}
+
+export const getAllWO = async (): Promise<WORow[]> => {
+
+  try {
+
+    const url =
+      `https://docs.google.com/spreadsheets/d/${SPREADSHEET_ID}/gviz/tq?tqx=out:json&sheet=${SHEET_DATABASE_WO}`;
+
+    const response = await fetch(url);
+
+    const text = await response.text();
+
+    const jsonString = text.substring(
+      text.indexOf("{"),
+      text.lastIndexOf("}") + 1
+    );
+
+    const jsonData = JSON.parse(jsonString);
+
+    const rows = jsonData.table.rows;
+
+    return rows.map((row: any) => ({
+
+      woNumber: String(row.c[0]?.v || ""),
+
+      openDate: String(row.c[2]?.f || row.c[2]?.v || ""),
+
+      area: String(row.c[7]?.v || ""),
+
+      machine: String(row.c[8]?.v || ""),
+
+      statusWO: String(row.c[9]?.v || ""),
+
+      problem: String(row.c[10]?.v || ""),
+
+      statusProgress: String(row.c[13]?.v || ""),
+
+      picEngineer: String(row.c[14]?.v || ""),
+
+      downtime: Number(row.c[19]?.v || 0),
+
+      mttr: Number(row.c[20]?.v || 0)
+
+    }));
+
+  } catch (error) {
+
+    console.log(error);
+
+    return [];
+
+  }
+
+};
+
