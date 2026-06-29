@@ -394,7 +394,20 @@ export const getWOSummary = async (): Promise<WOSummary> => {
    rows.forEach((row:any)=>{
 
   if(!row?.c) return;
+rows.forEach((row:any)=>{
 
+  if(!row?.c) return;
+
+  console.log(
+    "WO:",
+    row.c[0]?.v,
+    "| STATUS_PROGRESS:",
+    row.c[13]?.v
+  );
+
+  const statusProgress = String(row.c[13]?.v || "").trim().toUpperCase();
+
+  ...
   console.log(
     "WO :",
     row.c[0]?.v,
