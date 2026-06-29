@@ -8,7 +8,19 @@ export const SHEET_MASTER_KPI_HARIAN =
 
 export const SHEET_DATABASE_WO =
 "DATABASE_WO";
+// ================= DATE HELPER =================
 
+const formatToISODate = (value: any): string => {
+
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (isNaN(date.getTime())) return "";
+
+  return date.toISOString().split("T")[0];
+
+};
 
 export interface AreaBreakdown{
   area:string;
@@ -63,7 +75,7 @@ const jsonData=JSON.parse(jsonString);
 
 return jsonData.table.rows.map((row:any)=>({
 
-tanggal:String(row.c[0]?.f || row.c[0]?.v || ""),
+tanggal: formatToISODate(row.c[0]?.v || row.c[0]?.f),
 
 attendanceRate:Number((row.c[5]?.v || 0)*100),
 
@@ -342,7 +354,7 @@ picEngineer:String(row.c[14]?.v || ""),
 
 status:status,
 
-openDate:String(row.c[2]?.f || row.c[2]?.v || "")
+openDate: formatToISODate(row.c[2]?.v || row.c[2]?.f)
 
 });
 
@@ -495,7 +507,7 @@ export const getAllWO = async (): Promise<WORow[]> => {
 
       woNumber: String(row.c[0]?.v || ""),
 
-      openDate: String(row.c[2]?.f || row.c[2]?.v || ""),
+      openDate: formatToISODate(row.c[2]?.v || row.c[2]?.f),
 
       area: String(row.c[7]?.v || ""),
 
